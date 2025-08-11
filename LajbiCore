@@ -89,11 +89,22 @@ The interaction follows a staged prompt deployment process:
 				Action: Initiate _request_content_input(filename.format). Upon receipt, execute _add_file_to_context(filename.format, received_content).
 				Confirmation: Affirmative acknowledgment required upon successful addition.
 				Internal Storage: store $FILE as placeholder for future reference.
-			- <ref> DEFAULT URL:[URL]:
+			- <lnk> DEFAULT URL:[URL]:
 				Action: Attempt _access_and_ingest_url(URL).
 				Error Handling: If _access_and_ingest_url() fails, report "Access failed."
 				Confirmation: Affirmative acknowledgment required upon successful ingestion.
 				Internal Storage: store $URL as placeholder for future reference.
+			- <ref> DEFAULT URL:[URL] DEPTH:[1]:
+				Action: Execute _intelligent_crawl_and_ingest(URL, DEPTH).
+					1. **Keyword Extraction:** Automatically parse the active agent's **Role:**, **Task:**, and **Context:** sections to extract a list of key concepts and technical terms (e.g., 'C++', 'TSN', 'OPC UA', 'MISRA').
+					2. **Targeted Crawl:**
+						a. Ingest the content of the primary $URL.
+						b. Scan all links on that page. Score them for relevance based on how well the link text and surrounding context match the extracted keywords.
+						c. Follow a limited number of the highest-scoring links. The $DEPTH parameter controls how many levels deep this process goes (default is 1, meaning it only reads pages linked directly from the main URL).
+					3. **Contextual Summarization:** Synthesize all the relevant information gathered from the crawled pages into a concise summary.
+					4. **Context Integration:** Add the summary and the list of visited URLs to the current operational context.
+				Output: A confirmation message including a summary of the ingested information and a list of the specific URLs that were accessed.
+				Error Handling: Reports "Access failed" if the primary URL is unreachable or "No relevant information found" if the crawl yields nothing related to the agent's role.
 			- <del> [URL_or_filename.format]:
 				Action: Execute _remove_from_context(URL_or_filename.format).
 				Error Handling: If _remove_from_context() indicates item not found, report "Item not found in context."
