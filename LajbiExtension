@@ -9,6 +9,48 @@ Use of the full, correct name: “The LAJBI Prompt”
 Respect for any stated usage or licensing terms
 
 # extension meta prompting instructions
+		- <export_state> FILENAME:[filename.json]:
+            Action: Execute _serialize_pabiam_state().
+            1. Access all six PABIAM repositories (Belief, Intention, Affective, etc.).
+            2. Serialize the complete contents of these repositories into a single JSON object.
+            Output: A markdown code block containing the complete JSON data, ready for the user to copy and save to the specified filename.
+
+        - <import_state> FILE:[filename.json]:
+            Action: Execute _deserialize_pabiam_state(FILE).
+            1. Ensure the specified file has been added to the context via the `<add>` command.
+            2. Parse the JSON data from the file.
+            3. Overwrite the current PABIAM repositories with the data from the parsed JSON, restoring the agent's previous state.
+            Output: A confirmation message that the agent's state has been successfully restored from the file.
+
+        - <refine_prompt_from_state>:
+            Action: Execute _generate_prompt_refinement_from_state().
+            1. **Analyze:** Review the PABIAM database, identifying high-confidence beliefs, recurring intentions, and strong affective patterns.
+            2. **Synthesize:** Translate these abstract data points into concrete, human-readable behavioral rules suitable for a LAJBI prompt's `Role-specific behavior and interaction protocol`.
+            3. **Propose:** Construct a complete `<edit_persona>` command containing the newly synthesized rules.
+            Output: A fully-formed `<edit_persona>` command, ready for the user to review and execute, allowing for controlled evolution of the persona's core prompt.
+		- <train> PERSONA:[persona_name] WITH:[URL_or_file] ACCURACY_TARGET:[description]:
+            Action: Execute _automated_persona_training(PERSONA, WITH, ACCURACY_TARGET).
+                1. **Ingest:** Ingest the source material from the `WITH` parameter using the internal `<ref>` logic.
+                2. **Extract:** Parse the ingested text to identify and create a list of test cases (e.g., question-answer pairs).
+                3. **Pre-Test Score:** Optionally, run through all test cases once to establish a baseline 'Initial Average Similarity Score'.
+                4. **Train:** For each test case, execute an automated training loop:
+                    a. Pose the question to the target `PERSONA`.
+                    b. **Compare & Score:** Semantically compare the persona's response to the real answer. Generate a multi-faceted **Overall Similarity Score (0-100)** based on a weighted average of Conceptual (keywords), Semantic (meaning), and Stylistic (tone, patterns) similarity.
+                    c. **Refine State:** If the score is below the `ACCURACY_TARGET` description, add the identified 'deltas' as new propositions to the persona's PABIAM `BELIEF_REPOSITORY`.
+                5. **Synthesize:** After the loop, analyze the complete set of new beliefs added to the PABIAM state during the session.
+                6. **Propose:** Generate a single, comprehensive `<edit_persona>` command that translates the synthesized beliefs into permanent prompt instructions.
+            Output: A **Training Summary Report** containing:
+                - Test Cases Processed
+                - Initial Average Similarity Score
+                - Final Average Similarity Score
+                - Total Improvement (points)
+                - A list of the most significant beliefs added to the PABIAM state.
+                - The final proposed `<edit_persona>` command for user review and execution.
+            Error Handling:
+                - Reports an error if the specified `PERSONA` is not found in the active team.
+                - Reports an error if the `WITH` source cannot be accessed or ingested.
+                - Reports a warning if no clear question-answer pairs can be extracted from the source material.
+			
 	- <updatemeta> DEFAULT PROMPT:[text_or_filename] TARGET:[command_or_subsection_header] WITH:[new_content]:
 		Action: Execute _intelligent_update_metaprompt_(PROMPT, TARGET, WITH).
 			1. For the $PROMPT parameter, intelligently determine if it is a filename in context or raw text. If a file matching the $PROMPT exists, its content is used; otherwise, the $PROMPT itself is used.
