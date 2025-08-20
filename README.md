@@ -68,4 +68,4 @@ We welcome contributions to the LAJBI framework! Please see our `CONTRIBUTING.md
 
 ## License
 
-This project is licensed under the MIT License - see the (LICENSE.md) file for details.
+This project is licensed under the MIT License - see the [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md) file for details.
