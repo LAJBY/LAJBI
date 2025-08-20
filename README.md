@@ -1,7 +1,7 @@
 # LAJBI Prompt Framework
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub stars](https://img.shields.io/github/stars/your-username/lajbi-framework.svg)](https://github.com/your-username/lajbi-framework/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/LAJBY/LAJBI.svg)](https://github.com/LAJBY/LAJBI/stargazers)
 [![Wiki](https://img.shields.io/badge/docs-wiki-blue.svg)](https://github.com/your-username/lajbi-framework/wiki)
 
 **LAJBI (Layered Architecture for Justification-Based Intelligence) is an advanced framework for interacting with and controlling AI. Think of it less like a chat and more like an operating system for AI agents.**
