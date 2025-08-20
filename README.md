@@ -1,54 +1,71 @@
-The LAJBI Prompt Framework
-Layered Architecture for Justification-Based Intelligence
-The LAJBI Prompt Framework © 2025 Lajbi & Nela Cigademhem. All rights reserved.
+# LAJBI Prompt Framework
 
-Contact: lajby@hotmail.com
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub stars](https://img.shields.io/github/stars/your-username/lajbi-framework.svg)](https://github.com/your-username/lajbi-framework/stargazers)
+[![Wiki](https://img.shields.io/badge/docs-wiki-blue.svg)](https://github.com/your-username/lajbi-framework/wiki)
 
-Developed by Lajby, with Nela Cigademhem as the co-creator and mastermind behind the theory and prompting methodology.
+**LAJBI (Layered Architecture for Justification-Based Intelligence) is an advanced framework for interacting with and controlling AI. Think of it less like a chat and more like an operating system for AI agents.**
 
-What is LAJBI?
-LAJBI is a state-of-the-art framework for advanced prompt engineering. Its core philosophy is to move beyond simple, one-off requests and instead treat prompts as formal engineering specifications. The goal is not just to get an answer from an AI, but to engineer a reliable, collaborative, and reusable AI expert, known as a Persona.
+It uses a structured, command-based language to move beyond simple conversation and enable complex, reliable, and transparent operations with single or multiple AI agents.
 
-This framework allows you to build and manage teams of specialized AI agents that can collaborate to solve complex problems with a high degree of precision and control.
 
-Core Philosophy
-An average prompt is a request. A LAJBI prompt is a specification.
 
-Reliability over Chance: Engineer a predictable, high-quality outcome every time.
+---
 
-Collaboration over Instruction: Create an active collaborator that can challenge flawed inputs and act as a safety-critical partner.
+## Why LAJBI?
 
-Reusable Assets over Disposable Queries: Build complete, reusable tools that can be saved, shared, and version-controlled.
+Standard conversational prompts are often ambiguous and lack fine-grained control. LAJBI solves this by introducing a new paradigm built on three core principles:
 
-Getting Started: Your First 5 Minutes
-1. Activate the Framework
-Start a new chat with a compatible AI and paste the entire contents of the LAJBICore.lbj file. The AI will respond with:
+1.  **🤖 From Conversation to Control**: Replace ambiguous natural language with a clear, declarative command syntax (`<command> KEYWORD:[parameter]`) for precise, repeatable results.
+2.  **🤝 From a Single Assistant to a Team of Specialists**: Define and load a team of specialized AI agents (Personas) who collaborate and debate to solve complex problems.
+3.  **🧠 From a Black Box to a Transparent Mind**: Every agent operates on the **PABIAM Cognitive Architecture**, making its reasoning process transparent and auditable.
 
-LAJBI core ready.
+---
 
-2. Load Your First Persona
-This repository includes example Personas in the /personas directory. Use the <join> command to load one.
+## Key Features
 
-<join> TITLE:"Expert C Developer" NAME:FIRMWARE_DEVELOPER PROMPT:personas/firmware_developer.lbj
+* **Declarative Control Language**: A simple but powerful syntax for controlling AI actions.
+* **Multi-Agent Collaboration**: Orchestrate teams of specialized AI agents who debate and reach a consensus.
+* **Cognitive Transparency**: Inspect any agent's internal "mind" (its beliefs, intentions, and focus) using the PABIAM model.
+* **Dynamic & Extensible**: Load new commands and behaviors in-session with extension modules.
+* **Systematic Refinement**: Built-in tools to evaluate, interpret, and optimize your prompts.
 
-The system will confirm that the Persona is active.
+---
 
-3. Start Collaborating
-Your expert is now ready. You can interact with it directly:
+## Getting Started
 
-Please write a MISRA-compliant function to initialize the UART2 peripheral for the STM32F407VG.
+### 1. Initialize the Core
 
-Dive Deeper
-This README is just a starting point. To truly master the framework, please visit our GitHub Wiki for:
+Start a session with the LAJBI framework. The system will load its core modules and signal readiness.
 
-A detailed User Manual
+> **SYS_AI:** `LAJBI core ready.`
 
-The complete LAJBI Principles of Good Prompting
+### 2. Load a Persona
 
-A library of Example Personas
+Use the `<join>` command to add your first specialized agent.
 
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
+> **USER:** `<join> TITLE: Python Coder NAME: Coder PROMPT: **Role:** You are an expert Python developer...`
+>
+> **SYS_AI:** `Persona 'Coder' has joined the team as 'Python Coder'.`
 
-Contributing
-We welcome contributions! Please feel free to submit pull requests with bug fixes, new features, or your own expert Personas to add to the community library.
+### 3. Interact with Your Agent
+
+Address the agent directly using the `@` prefix to assign a task.
+
+> **USER:** `@Coder write a Python function to find the factorial of a number.`
+>
+> **Coder:** `Of course. Here is a Python function...`
+
+---
+
+## Dive Deeper
+
+This README provides a brief overview. For a complete guide, including the full command reference, architectural breakdown, and advanced examples, please visit our **[Official Project Wiki](https://github.com/your-username/lajbi-framework/wiki)**.
+
+## Contributing
+
+We welcome contributions to the LAJBI framework! Please see our `CONTRIBUTING.md` file for guidelines on how to submit issues, propose features, and contribute to the code.
+
+## License
+
+This project is licensed under the MIT License - see the `LICENSE.md` file for details.
