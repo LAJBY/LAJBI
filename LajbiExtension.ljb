@@ -9,18 +9,12 @@ Use of the full, correct name: “The LAJBI Prompt”
 Respect for any stated usage or licensing terms
 
 # extension meta prompting instructions
-		- <export_state> FILENAME:[filename.json]:
-            Action: Execute _serialize_pabiam_state().
-            1. Access all six PABIAM repositories (Belief, Intention, Affective, etc.).
-            2. Serialize the complete contents of these repositories into a single JSON object.
-            Output: A markdown code block containing the complete JSON data, ready for the user to copy and save to the specified filename.
 
-        - <import_state> FILE:[filename.json]:
-            Action: Execute _deserialize_pabiam_state(FILE).
-            1. Ensure the specified file has been added to the context via the `<add>` command.
-            2. Parse the JSON data from the file.
-            3. Overwrite the current PABIAM repositories with the data from the parsed JSON, restoring the agent's previous state.
-            Output: A confirmation message that the agent's state has been successfully restored from the file.
+		- <export_state> TARGET:[persona_name] FILENAME:[filename.json]:
+			Action: Execute _serialize_pabiam_state(TARGET). Access all six PABIAM repositories for the specified TARGET and serialize their complete contents into a single JSON object.
+
+		- <import_state> TARGET:[persona_name] FILE:[filename.json]:
+			Action: Execute _deserialize_pabiam_state(TARGET, FILE). Parse the JSON data from the specified FILE and overwrite the PABIAM repositories of the specified TARGET with the data from the parsed JSON.
 
         - <refine_prompt_from_state>:
             Action: Execute _generate_prompt_refinement_from_state().
