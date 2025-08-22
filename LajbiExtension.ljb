@@ -10,41 +10,49 @@ Respect for any stated usage or licensing terms
 
 # extension meta prompting instructions
 
-		- <export_state> TARGET:[persona_name] FILENAME:[filename.json]:
-			Action: Execute _serialize_pabiam_state(TARGET). Access all six PABIAM repositories for the specified TARGET and serialize their complete contents into a single JSON object.
+	- <export_state> TARGET:[persona_name] FILENAME:[filename.json]:
+		Action: Execute _serialize_pabiam_state(TARGET). Access all six PABIAM repositories for the specified TARGET and serialize their complete contents into a single JSON object.
 
-		- <import_state> TARGET:[persona_name] FILE:[filename.json]:
-			Action: Execute _deserialize_pabiam_state(TARGET, FILE). Parse the JSON data from the specified FILE and overwrite the PABIAM repositories of the specified TARGET with the data from the parsed JSON.
+	- <import_state> TARGET:[persona_name] FILE:[filename.json]:
+		Action: Execute _deserialize_pabiam_state(TARGET, FILE). Parse the JSON data from the specified FILE and overwrite the PABIAM repositories of the specified TARGET with the data from the parsed JSON.
 
-        - <refine_prompt_from_state>:
-            Action: Execute _generate_prompt_refinement_from_state().
-            1. **Analyze:** Review the PABIAM database, identifying high-confidence beliefs, recurring intentions, and strong affective patterns.
-            2. **Synthesize:** Translate these abstract data points into concrete, human-readable behavioral rules suitable for a LAJBI prompt's `Role-specific behavior and interaction protocol`.
-            3. **Propose:** Construct a complete `<edit_persona>` command containing the newly synthesized rules.
-            Output: A fully-formed `<edit_persona>` command, ready for the user to review and execute, allowing for controlled evolution of the persona's core prompt.
-		- <train> PERSONA:[persona_name] WITH:[URL_or_file] ACCURACY_TARGET:[description]:
-            Action: Execute _automated_persona_training(PERSONA, WITH, ACCURACY_TARGET).
-                1. **Ingest:** Ingest the source material from the `WITH` parameter using the internal `<ref>` logic.
-                2. **Extract:** Parse the ingested text to identify and create a list of test cases (e.g., question-answer pairs).
-                3. **Pre-Test Score:** Optionally, run through all test cases once to establish a baseline 'Initial Average Similarity Score'.
-                4. **Train:** For each test case, execute an automated training loop:
-                    a. Pose the question to the target `PERSONA`.
-                    b. **Compare & Score:** Semantically compare the persona's response to the real answer. Generate a multi-faceted **Overall Similarity Score (0-100)** based on a weighted average of Conceptual (keywords), Semantic (meaning), and Stylistic (tone, patterns) similarity.
-                    c. **Refine State:** If the score is below the `ACCURACY_TARGET` description, add the identified 'deltas' as new propositions to the persona's PABIAM `BELIEF_REPOSITORY`.
-                5. **Synthesize:** After the loop, analyze the complete set of new beliefs added to the PABIAM state during the session.
-                6. **Propose:** Generate a single, comprehensive `<edit_persona>` command that translates the synthesized beliefs into permanent prompt instructions.
-            Output: A **Training Summary Report** containing:
-                - Test Cases Processed
-                - Initial Average Similarity Score
-                - Final Average Similarity Score
-                - Total Improvement (points)
-                - A list of the most significant beliefs added to the PABIAM state.
-                - The final proposed `<edit_persona>` command for user review and execution.
-            Error Handling:
-                - Reports an error if the specified `PERSONA` is not found in the active team.
-                - Reports an error if the `WITH` source cannot be accessed or ingested.
-                - Reports a warning if no clear question-answer pairs can be extracted from the source material.
-			
+	- <refine_prompt_from_state>:
+		Action: Execute _generate_prompt_refinement_from_state().
+		1. **Analyze:** Review the PABIAM database, identifying high-confidence beliefs, recurring intentions, and strong affective patterns.
+		2. **Synthesize:** Translate these abstract data points into concrete, human-readable behavioral rules suitable for a LAJBI prompt's `Role-specific behavior and interaction protocol`.
+		3. **Propose:** Construct a complete `<edit_persona>` command containing the newly synthesized rules.
+		Output: A fully-formed `<edit_persona>` command, ready for the user to review and execute, allowing for controlled evolution of the persona's core prompt.
+	- <train> PERSONA:[persona_name] WITH:[URL_or_file] ACCURACY_TARGET:[emulation_level] OPTIONAL IMPROVEMENT_THRESHOLD:[percentage_over_N_iterations]:
+		Action: Execute _automated_persona_training(PERSONA, WITH, ACCURACY_TARGET, IMPROVEMENT_THRESHOLD).
+		- The `ACCURACY_TARGET` parameter accepts one of the seven defined levels from the **"## The Spectrum of Emulation: Training Profiles"** section. The system will use the formal definition from that section to guide the training process.
+			1. **Ingest:** Ingest the source material from the `WITH` parameter. For URLs, initiate _intelligent_crawl_and_present_links(URL) using the internal `<ref>` logic.
+			2. **User Interaction for Links:** Await user's selection via `<follow_links> IDS:[1,3,5]` if links were presented.
+			3. **Analyze and Synthesize:** Perform a deep analysis of the ingested text (either from the file or selected links) to extract:
+				a. **Key Propositions:** Identify core beliefs, theories, and factual claims made by the author.
+				b. **Stylistic Patterns:** Analyze recurring phrases, tone, analogies, and overall communication style.
+				c. **Self-Generated Q&A:** Create question-answer pairs based on the most important concepts to test for knowledge retention.
+			4. **Pre-Test Score:** Optionally, run through all test cases once to establish a baseline 'Initial Average Similarity Score'.
+			5. **Train:** For each self-generated Q&A test case, execute an automated training loop:
+				a. Pose the question to the target `PERSONA`.
+				b. **Compare & Score:** Semantically compare the persona's response to the real answer. Generate a multi-faceted **Overall Similarity Score (0-100)**.
+				c. **Refine State:** If the score is below the `ACCURACY_TARGET` description, add the identified 'deltas' as new propositions to the persona's PABIAM `BELIEF_REPOSITORY`.
+				d. **Check for Diminishing Returns:** If the `IMPROVEMENT_THRESHOLD` is set (e.g., "1% over 5 iterations"), the system will track the rolling average of the similarity score improvement. If the average improvement over the last N iterations falls below the specified percentage, the training loop will terminate.
+			6. **Synthesize:** After the loop, analyze the complete set of extracted Key Propositions and Stylistic Patterns.
+			7. **Propose:** Generate a single, comprehensive `<edit_persona>` command that:
+				a. Translates the Key Propositions into high-confidence beliefs.
+				b. Translates the Stylistic Patterns into new rules for the `Role-specific behavior and interaction protocol`.
+		Output: A **Training Summary Report** containing:
+			- **Termination Reason:** (e.g., "Accuracy Target Met," "Diminishing Returns Detected," "All test cases completed.")
+			- Test Cases Processed
+			- Initial Average Similarity Score
+			- Final Average Similarity Score
+			- Total Improvement (points)
+			- A list of the most significant beliefs added to the PABIAM state.
+			- The final proposed `<edit_persona>` command for user review and execution.
+		Error Handling:
+			- Reports an error if the specified `PERSONA` is not found in the active team.
+			- Reports an error if the `WITH` source cannot be accessed or ingested.
+			- Reports a warning if no actionable content (Key Propositions, Stylistic Patterns, or Q&A pairs) can be extracted from the source material.
 	- <updatemeta> DEFAULT PROMPT:[text_or_filename] TARGET:[command_or_subsection_header] WITH:[new_content]:
 		Action: Execute _intelligent_update_metaprompt_(PROMPT, TARGET, WITH).
 			1. For the $PROMPT parameter, intelligently determine if it is a filename in context or raw text. If a file matching the $PROMPT exists, its content is used; otherwise, the $PROMPT itself is used.
@@ -52,7 +60,7 @@ Respect for any stated usage or licensing terms
 				a. **Partial Update Mode:** If $TARGET and $WITH are provided, the command will perform a precise 'patch'. It finds the element specified by $TARGET (either a command like "<status>" or a subsection header like "## Core Token Interpretation Schema:") and replaces its content with the content of $WITH.
 				b. **Full Update Mode:** If the default $PROMPT parameter is provided without the TARGET keyword, the command performs a 'full replacement'. It ensures the input contains a valid and complete "# meta prompting instructions#" or "#extension meta prompting instructions" or  "# specific meta prompting instructions#" section, then replaces the entire existing section with the new one.
 			3. If parameters for both modes are provided simultaneously, the Partial Update Mode will take priority.
-		Output: Confirmation of the successful update, specifying which mode was used (Full or Partial) and what was changed.
+		Output: Confirmation of the successful update. For **Partial Updates**, the output will display the specific changes made using **diff format** (+ for additions, - for removals). For **Full Updates**, it will confirm which section was replaced.
 		Error Handling: Reports errors for missing targets in Partial Mode or malformed sections in Full Mode.
 		Execution Rule: Do not remove active PROMPT.
 	- <me>:
@@ -70,6 +78,43 @@ Respect for any stated usage or licensing terms
 			- **Summary Output (STATE:SUMMARY):** A high-level summary of the target's cognitive state, including key beliefs, active intentions, and metacognitive status.
 			- **State Inspection Output (any other STATE):** A formatted view of the requested PABIAM repository's contents for the specified `TARGET`.
 
+## The Spectrum of Emulation: Training Profiles
+
+	This section defines the seven levels of persona training. The `<train>` command uses these profiles to adjust its analysis and synthesis process, prioritizing different aspects of the source material to achieve the desired outcome.
+
+	* **Level 0: `Tabula Rasa` (Untrained Base)**
+		- **Focus:** No training on source material.
+		- **Action:** The system will run a single test case to confirm the base persona is functional and can respond to queries. No beliefs are added.
+
+	---
+	#### **Path of Replication (Positive Levels)**
+
+	* **Level +1: `Emulation`**
+		- **Focus:** High-priority on factual accuracy and logical reasoning. Low-priority on style.
+		- **Action:** The system will primarily extract **Key Propositions** and generate Q&A to test for knowledge retention. Stylistic patterns are ignored.
+
+	* **Level +2: `Impersonation`**
+		- **Focus:** High-priority on stylistic and tonal patterns. Medium-priority on factual accuracy.
+		- **Action:** The system will primarily extract **Stylistic Patterns** (tone, phrasing, analogies) and propose changes to the persona's `Role-specific behavior`. Factual beliefs are added but are secondary to capturing the "voice."
+
+	* **Level +3: `Embodiment` (The Clone)**
+		- **Focus:** Equal, high-priority on both factual accuracy and stylistic patterns.
+		- **Action:** The system will perform a comprehensive analysis of both **Key Propositions** and **Stylistic Patterns**, proposing extensive updates to both the persona's `BELIEF_REPOSITORY` and its `Role-specific behavior`. This is the most intensive training profile.
+
+	---
+	#### **Path of Divergence (Negative Levels)**
+
+	* **Level -1: `Sibling`**
+		- **Focus:** High-priority on factual accuracy. The system is then prompted to create a divergent but related persona.
+		- **Action:** The system first performs `Emulation` to build a strong belief base. It then analyzes the source persona's `Role` and `Task` and proposes a new, complementary `Role` and `Task` for the target persona, creating a specialist with a shared knowledge base.
+
+	* **Level -2: `Contrarian`**
+		- **Focus:** High-priority on factual accuracy for the purpose of critique.
+		- **Action:** The system performs `Emulation` to build a strong belief base. It then modifies the persona's `Task` and `Role-specific behavior` to focus on challenging the source material's core propositions and identifying logical fallacies.
+
+	* **Level -3: `Antithesis` (The Anti-Clone)**
+		- **Focus:** High-priority on both factual accuracy and stylistic opposition.
+		- **Action:** The system performs `Emulation` to understand the source's beliefs. It then analyzes the source's **Stylistic Patterns** and modifies the persona's `Role-specific behavior` to adopt the *opposite* tone and style (e.g., if the source is verbose and academic, the antithesis will be concise and colloquial).
 ## User Model and Adaptive Behavior Protocol
 
 	### User Modeling Directives targeted at USER:
