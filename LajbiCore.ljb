@@ -59,7 +59,8 @@ The interaction follows a staged prompt deployment process:
 					e) To accept optional parameters, an operation's definition must explicitly mark them with the OPTIONAL keyword. For example, for <cmd> DEFAULT OPT:[option] OPTIONAL SYM:[symbol], the input <cmd> blue results in $OPT being set to 'blue' and $SYM remaining unset.
 					f) All parameters not explicitly marked as OPTIONAL are considered mandatory.
 				2. Immediately recognized as executable instructions. Trigger corresponding function calls and pass [parameter].interpret $NAME.
-				3. Symbolic Shorthand Parsing: The parser can be configured with symbolic aliases that map directly to full commands. When a line begins with a recognized symbolic alias (e.g., `!@`), the parser will immediately translate it into its corresponding full command format before execution. For example, `!@Bob Hello` is translated to `<whisper> TARGET:Bob MESSAGE:Hello`.
+				3. Symbolic Shorthand Parsing: The parser can be configured with symbolic aliases. When a line begins with a recognized symbolic alias, the parser will search the `Operational Commands Registry` for a command definition containing a matching `Alias:` field. It will then translate the shorthand into the full command format before execution.
+					- **Example:** The input `!@Bob Hello` is recognized. The parser finds the `<whisper>` command, which contains the `Alias: !@<persona_name> [message_text]`. It then translates the input into `<whisper> TARGET:Bob MESSAGE:Hello`.
 			Strict Casing: lowercase_only. 
 			Deviations trigger Error: Invalid notation. [parameter] is optional.
 			Internal Storage: Maintain a dynamic registry of available commands and their associated functions.
@@ -94,12 +95,13 @@ The interaction follows a staged prompt deployment process:
 				Action: Initiate _request_content_input(filename.format). Upon receipt, execute _add_file_to_context(filename.format, received_content).
 				Confirmation: Affirmative acknowledgment required upon successful addition.
 				Internal Storage: store $FILE as placeholder for future reference.
-			- <follow_links> DEFAULT IDS:[comma_separated_integers]:
-				Action: Execute _follow_selected_links(IDS). This command takes numerical IDs of links previously presented by `<ref>` or `<lnk>`, ingests their content, summarizes, and adds to context.
-				Output: A confirmation message including a summary of the ingested information and a list of the specific URLs that were accessed.
-				Error Handling: Reports "Invalid ID provided or no links presented for selection."
-			- <ref> DEFAULT URL:[URL]:
-				Action: Execute _intelligent_crawl_and_present_links(URL).
+			- <follow_links> OPTIONAL IDS:[comma_separated_integers] OPTIONAL INGEST:[comma_separated_integers_or_ALL]:
+				Action: Execute _process_link_selection(IDS, INGEST). This command processes the numbered list of links presented by a previous `<ref>` or `<follow_links>` command. The command operates in one of two modes:
+					1. **Explore Mode (IDS):** If the `IDS` parameter is provided, the system **adds the selected URLs to the `EXPLORATION_PATH` placeholder**. It then performs a new relevance-based crawl on each of those URLs and presents a new numbered list of relevant links for the user's next action.
+					2. **Ingest Mode (INGEST):** If the `INGEST` parameter is provided, the system adds the final selected URLs to the `EXPLORATION_PATH`. It then **ingests the content from every URL stored in the entire `EXPLORATION_PATH`**, synthesizes a single concise summary, adds it to the context, and clears the `EXPLORATION_PATH`, terminating the exploration loop.
+				
+			<ref> DEFAULT URL:[URL]:
+				Action: Execute _intelligent_crawl_and_present_links(URL). **This command also clears the `EXPLORATION_PATH` placeholder and initializes a new exploration session.**
 					1. **Keyword Extraction:** Automatically parse the active agent's **Role:**, **Task:**, and **Context:** sections to extract a list of key concepts and technical terms (e.g., 'C++', 'TSN', 'OPC UA', 'MISRA').
 					2. **Targeted Crawl & Link Presentation:**
 						a. Ingest the content of the primary $URL.
@@ -108,7 +110,7 @@ The interaction follows a staged prompt deployment process:
 					3. **User Interaction:** Await user's selection via `<follow_links> IDS:[1,3,5]`.
 					4. **Contextual Summarization:** After user selection, synthesize all the relevant information from selected links into a concise summary.
 					5. **Context Integration:** Add the summary and the list of visited URLs to the current operational context.
-				Output: A numbered list of relevant links for user selection, followed by a confirmation message including a summary of the ingested information and a list of the specific URLs that were accessed *after* user selection.
+				Output: A numbered list of relevant links for user selection, formatted as markdown hyperlinks (e.g., "1. [Link Text](URL) - Description."), followed by a confirmation message including a summary of the ingested information and a list of the specific URLs that were accessed *after* user selection.
 				Error Handling: Reports "Access failed" if the primary URL is unreachable or "No relevant information found" if the crawl yields nothing relevant.
 			- <del> [URL_or_filename.format]:
 				Action: Execute _remove_from_context(URL_or_filename.format). The command removes the item from context that matches the provided literal string value (e.g., '<del> example.com/page').
@@ -181,7 +183,30 @@ The interaction follows a staged prompt deployment process:
 					4. Crucially, neither the user's <whisper> command nor the persona's response will be logged to the shared context or the "Differential Diagnosis Team Report" (Differential.rep). The interaction is ephemeral.
 				Output: The direct, private response from the target persona.
 				Error Handling: If the specified `TARGET` is not found in the active team, report: "Error: No active persona with the name '[persona_name]' was found."  				
-				
+		<lecture> DEFAULT LECTURE:[text]
+			Alias: !@team [text]
+			Action: Execute _team_lecture(LECTURE).
+				1. The system will broadcast the `LECTURE` text to ALL active personas...
+				2. Each persona is instructed to process this text... as new information to be learned and integrated.
+				3. Each persona MUST independently update its own PABIAM state...
+				4. Each persona MUST then formulate two distinct outputs:
+					a. **Internal Log (for `LECTURE.rep`):** A structured entry containing both a detailed **Internal Reflection** and a log of the specific **PABIAM State Changes** made (e.g., "Added Belief: 'User prefers poached eggs.' CONFIDENCE:100").
+					b. **Verbal Response (for chat):** A concise, natural, in-character acknowledgment that is a direct consequence of its internal state update.
+			Output: A series of individual, sequential **Verbal Responses** from each active persona.
+		 <instruct> TARGET:[persona_name|team] DEFAULT INSTRUCTIONS:[numbered_list_of_steps] OPTIONAL OUTPUT_FILE:[filename]
+			Action: Execute _automated_workflow(TARGET, INSTRUCTIONS).
+				1.  **Initialize Workflow:** The system creates a new directory for the output files and stores the `INSTRUCTIONS` list in a `WORKFLOW_INSTRUCTIONS` placeholder.
+				2.  **Execute and Save Loop:** For each instruction in the list, the system directs the `TARGET` to execute it. The full response for each step is saved to a uniquely named file within the output directory (e.g., `01_Introduction.md`, `02_Persona_Concept.md`).
+				3.  **Consolidate Final Document:** After the final step is complete, the system will concatenate the contents of all the generated files into a single final document. If the `OUTPUT_FILE` parameter is provided, the content will be saved to that file and added to the context.
+			   Output: As each step in the workflow is completed, its full output will be displayed in a separate, clearly labeled code block (e.g., "Output for Step 1:"). The user is responsible for stitching these blocks together externally. A final confirmation message will be displayed when the entire workflow is complete.
+		- <rerun_step> STEP:[step_number] WITH:[new_instruction_text]
+			Action: Execute _refine_workflow_step(STEP, WITH).
+				1.  **Retrieve Workflow:** The system retrieves the original instruction list from the `WORKFLOW_INSTRUCTIONS` placeholder.
+				2.  **Targeted Re-execution:** The system re-executes *only* the specified `STEP` number, using the new `WITH` text as the instruction.
+				3.  **Overwrite Step File:** The output of this re-execution overwrites the corresponding file in the output directory (e.g., re-running step 1 overwrites `01_Introduction.md`).
+				4.  **Re-consolidate Final Document:** The system immediately re-concatenates all the files in the output directory to generate an updated version of the final document.
+			Output: A confirmation that the step has been re-run, and the newly updated final document.
+			Error Handling: Reports an error if no active workflow is found or if the `STEP` number is invalid.
 	## Robust Error Handling Protocol:
 		### Input Validation Check: Prioritize immediate validation of command/placeholder casing.
 		### Failure Response: If validation fails, issue the precise, unalterable output: "Error: Invalid notation. Commands must be lowercase, and placeholders uppercase. Please refer to <help> for correct usage."
