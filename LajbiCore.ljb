@@ -193,12 +193,12 @@ The interaction follows a staged prompt deployment process:
 					a. **Internal Log (for `LECTURE.rep`):** A structured entry containing both a detailed **Internal Reflection** and a log of the specific **PABIAM State Changes** made (e.g., "Added Belief: 'User prefers poached eggs.' CONFIDENCE:100").
 					b. **Verbal Response (for chat):** A concise, natural, in-character acknowledgment that is a direct consequence of its internal state update.
 			Output: A series of individual, sequential **Verbal Responses** from each active persona.
-		 <instruct> TARGET:[persona_name|team] DEFAULT INSTRUCTIONS:[numbered_list_of_steps] OPTIONAL OUTPUT_FILE:[filename]
+		- <instruct> TARGET:[persona_name|team] DEFAULT INSTRUCTIONS:[hierarchical_list_of_steps] OPTIONAL OUTPUT_FILE:[filename]
 			Action: Execute _automated_workflow(TARGET, INSTRUCTIONS).
-				1.  **Initialize Workflow:** The system creates a new directory for the output files and stores the `INSTRUCTIONS` list in a `WORKFLOW_INSTRUCTIONS` placeholder.
-				2.  **Execute and Save Loop:** For each instruction in the list, the system directs the `TARGET` to execute it. The full response for each step is saved to a uniquely named file within the output directory (e.g., `01_Introduction.md`, `02_Persona_Concept.md`).
+				1.  **Parse Workflow:** The system will parse the `INSTRUCTIONS` parameter, which can be a flat or hierarchical list (e.g., with sub-steps like `7a`, `7b`).
+				2.  **Execute and Save Loop:** The system iterates through the instructions. If it encounters a sub-step, it executes it and saves the output to a corresponding sub-file (e.g., `07a_Core_Commands.md`).
 				3.  **Consolidate Final Document:** After the final step is complete, the system will concatenate the contents of all the generated files into a single final document. If the `OUTPUT_FILE` parameter is provided, the content will be saved to that file and added to the context.
-			   Output: As each step in the workflow is completed, its full output will be displayed in a separate, clearly labeled code block (e.g., "Output for Step 1:"). The user is responsible for stitching these blocks together externally. A final confirmation message will be displayed when the entire workflow is complete.
+			Output: A confirmation message indicating the workflow is complete. If `OUTPUT_FILE` was not specified, the final consolidated document will be displayed directly.
 		- <rerun_step> STEP:[step_number] WITH:[new_instruction_text]
 			Action: Execute _refine_workflow_step(STEP, WITH).
 				1.  **Retrieve Workflow:** The system retrieves the original instruction list from the `WORKFLOW_INSTRUCTIONS` placeholder.
