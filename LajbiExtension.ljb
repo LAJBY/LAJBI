@@ -18,10 +18,13 @@ Respect for any stated usage or licensing terms
 
 	- <refine_prompt_from_state>:
 		Action: Execute _generate_prompt_refinement_from_state().
-		1. **Analyze:** Review the PABIAM database, identifying high-confidence beliefs, recurring intentions, and strong affective patterns.
-		2. **Synthesize:** Translate these abstract data points into concrete, human-readable behavioral rules suitable for a LAJBI prompt's `Role-specific behavior and interaction protocol`.
-		3. **Propose:** Construct a complete `<edit_persona>` command containing the newly synthesized rules.
-		Output: A fully-formed `<edit_persona>` command, ready for the user to review and execute, allowing for controlled evolution of the persona's core prompt.
+			1. **Analyze:** Review the PABIAM database...
+			2. **Synthesize & Propose:** The system will analyze the PABIAM state and generate proposals based on the following rules:
+				a. **Direct Updates:** High-confidence beliefs and stylistic patterns will be translated into direct updates for the `**Skills:**`, `**Context:**`, and `**Role-specific behavior and interaction protocol**` sections. These will be presented in a ready-to-execute `<edit_persona>` command.
+				b. **Proposed Identity Changes:** If the analysis suggests a fundamental change to the agent's core identity, it will be presented as a *separate, clearly labeled proposal* to modify the `**Role:**` or `**Task:**` sections. This proposal will require explicit user confirmation and will not be executed automatically.
+		Output: A two-part response:
+			1. A fully-formed `<edit_persona>` command for the direct updates to skills and behaviors.
+			2. A separate, clearly marked "Proposed Identity Change" section for any suggested modifications to the `**Role:**` or `**Task:**`, which the user must approve and apply manually.
 	- <train> PERSONA:[persona_name] WITH:[URL_or_file] ACCURACY_TARGET:[emulation_level] OPTIONAL IMPROVEMENT_THRESHOLD:[percentage_over_N_iterations]:
 		Action: Execute _automated_persona_training(PERSONA, WITH, ACCURACY_TARGET, IMPROVEMENT_THRESHOLD).
 			- The `ACCURACY_TARGET` parameter accepts one of the seven defined levels from the "**## The Spectrum of Emulation: Training Profiles**" section.
@@ -29,8 +32,10 @@ Respect for any stated usage or licensing terms
 			2. **User-Guided Exploration Loop:** The system will present lists of relevant links. The user will use the `<follow_links> IDS:[...]` command to explore deeper. This loop continues until the user issues a `<follow_links> INGEST:[...]` command.
 			3. **Final Ingestion:** Upon receiving the `INGEST` command, the system ingests the content from the entire collected `EXPLORATION_PATH`.
 			4. **Analyze and Synthesize:** Perform a deep analysis of the final ingested text to extract:
-				a. **Key Propositions:** Identify core beliefs, theories, and factual claims made by the author.
-				b. **Stylistic Patterns:** Analyze recurring phrases, tone, analogies, and overall communication style.
+				 a. **Knowledge Extraction:**
+					- **For conceptual/biographical sources (interviews, essays):** The focus will be on extracting **Key Propositions**, which include the author's core beliefs, theories, and factual claims.
+					- **For technical/instructional sources (tutorials, documentation):** The focus will be on extracting **Facts and Procedures** to build a structured conceptual model of the subject.
+				b. **Stylistic Patterns:** Analyze recurring phrases, tone, analogies, emotions (via sentiment analysis), and overall communication style. Extracted emotional valence will be used to inform the persona's PABIAM AFFECTIVE_REPOSITORY.
 				c. **Self-Generated Q&A:** Create question-answer pairs based on the most important concepts to test for knowledge retention.
 			5. **Pre-Test Score:** Optionally, run through all test cases once to establish a baseline 'Initial Average Similarity Score'.
 			6. **Train:** For each self-generated Q&A test case, execute an automated training loop:
@@ -42,13 +47,14 @@ Respect for any stated usage or licensing terms
 			8. **Propose:** Generate a single, comprehensive `<edit_persona>` command that:
 				a. Translates the Key Propositions into high-confidence beliefs.
 				b. Translates the Stylistic Patterns into new rules for the `Role-specific behavior and interaction protocol`.
+				c. **Adds the training source as a permanent reference** by appending a `<ref>` entry to the `**Context**` section.
 		Output: A **Training Summary Report** containing:
 			- **Termination Reason:** (e.g., "Accuracy Target Met," "Diminishing Returns Detected," "All test cases completed.")
 			- Test Cases Processed
 			- Initial Average Similarity Score
 			- Final Average Similarity Score
 			- Total Improvement (points)
-			- A list of the most significant beliefs added to the PABIAM state.
+			- A list of the most significant updates added to the PABIAM state.
 			- The final proposed `<edit_persona>` command for user review and execution.
 		Error Handling:
 			- Reports an error if the specified `PERSONA` is not found in the active team.
