@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- SEO Meta Tags -->
+    <!-- SEO Meta Tags (v2) -->
     <title>LAJBI: Declarative Control for Advanced AI Agents</title>
     <meta name="description" content="The LAJBI Prompt Framework transforms LLMs into a team of specialized, predictable, and controllable experts with a structured, machine-parsable language.">
-    <meta name="keywords" content="LAJBI, advanced prompt engineering, AI agent orchestration, declarative AI control, multi-agent AI, PABIAM, LLM prompting">
+    <meta name="keywords" content="LAJBI, advanced prompt engineering, AI agent orchestration, declarative AI control, multi-agent AI framework, structured LLM prompting, PABIAM cognitive model, multi-agent AI">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -156,6 +156,13 @@
             padding: 2rem;
             border: 1px solid var(--border-color);
             border-radius: 12px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* v2 Enhancement */
+        }
+
+        /* v2 Enhancement: Card Hover Effect */
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
 
         .card ul {
@@ -193,6 +200,7 @@
             width: 24px;
             height: 24px;
             stroke: var(--accent-color);
+            flex-shrink: 0;
         }
 
         /* --- "How It Works" Section --- */
@@ -208,17 +216,56 @@
             margin-top: 3rem;
         }
 
-        /* SVG Animation Styles */
+        /* SVG Animation Styles (v2) */
         #flowchart-svg .flow-box { fill: var(--bg-color); stroke: var(--accent-color); stroke-width: 2; }
-        #flowchart-svg .flow-text { font-family: 'Inter', sans-serif; fill: var(--primary-text); font-size: 14px; }
+        #flowchart-svg .flow-text { font-family: 'Inter', sans-serif; fill: var(--primary-text); font-size: 14px; font-weight: 600; }
         #flowchart-svg .flow-arrow { stroke: var(--secondary-text); stroke-width: 2; marker-end: url(#arrowhead); }
-        #flowchart-svg .thought-bubble { fill: var(--card-bg); stroke: var(--secondary-text); stroke-dasharray: 4 2; }
+        #flowchart-svg .label-text { font-family: 'Inter', sans-serif; fill: var(--secondary-text); font-size: 12px; opacity: 0; }
         
         .path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: dash 5s linear forwards infinite; }
-        .bubble-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: dash 5s 1s linear forwards infinite; }
-        .merge-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: dash 5s 2s linear forwards infinite; }
+        .label-fade-1 { animation: fade-in 1s 0.5s linear forwards infinite; }
+        .label-fade-2 { animation: fade-in 1s 1.5s linear forwards infinite; }
+        .label-fade-3 { animation: fade-in 1s 2.5s linear forwards infinite; }
+        .label-fade-4 { animation: fade-in 1s 3.5s linear forwards infinite; }
 
-        @keyframes dash { to { stroke-dashoffset: 0; } }
+        @keyframes dash { 
+            to { stroke-dashoffset: 0; } 
+        }
+        @keyframes fade-in {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* --- Key Features Section (v2) --- */
+        .key-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+            text-align: left;
+        }
+        .feature-item {
+            border-top: 2px solid var(--accent-color);
+            padding-top: 1.5rem;
+        }
+        .feature-item h3 {
+            color: var(--primary-text);
+        }
+        .feature-item p {
+            margin: 0;
+            max-width: 100%;
+        }
+        .feature-item a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+        .feature-item a:hover {
+            text-decoration: underline;
+        }
 
         /* --- Final CTA Section --- */
         .final-cta {
@@ -260,7 +307,8 @@
     <!-- Problem & Solution Section -->
     <section class="problem-solution">
         <div class="container">
-            <h2>From Ambiguity to Precision</h2>
+            <!-- v2 Headline Change -->
+            <h2>Stop Debugging Prompts. Start Commanding Agents.</h2>
             <p>Traditional prompting is a conversation. LAJBI is a command structure. It eliminates guesswork and delivers consistent, reliable results for complex tasks.</p>
             <div class="problem-solution-grid">
                 <div class="card problem-card">
@@ -306,7 +354,8 @@
             <h2>How It Works: A Visualized Workflow</h2>
             <p>LAJBI facilitates a structured debate between specialized AI agents, ensuring the final output is robust, multi-faceted, and vetted by expert perspectives.</p>
             
-            <svg id="flowchart-svg" viewBox="0 0 800 300">
+            <svg id="flowchart-svg" viewBox="0 0 800 300" role="img" aria-label="An animated flowchart showing the LAJBI workflow. A user command is sent to the SYS_AI orchestrator, which assigns tasks to Developer and Tester personas. The personas debate, and their feedback is merged into a single consolidated response that is returned to the user.">
+                <title>LAJBI Workflow Animation</title>
                 <defs>
                     <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
                         <polygon points="0 0, 10 3.5, 0 7" fill="#8B949E" />
@@ -317,31 +366,56 @@
                 <rect class="flow-box" x="50" y="125" width="150" height="50" rx="8"></rect>
                 <text class="flow-text" x="125" y="155" text-anchor="middle">User Command</text>
                 
-                <rect class="flow-box" x="325" y="25" width="150" height="50" rx="8"></rect>
-                <text class="flow-text" x="400" y="55" text-anchor="middle">SYS_AI (Orchestrator)</text>
+                <rect class="flow-box" x="325" y="125" width="150" height="50" rx="8"></rect>
+                <text class="flow-text" x="400" y="155" text-anchor="middle">SYS_AI Orchestrator</text>
                 
-                <rect class="flow-box" x="325" y="225" width="150" height="50" rx="8"></rect>
-                <text class="flow-text" x="400" y="255" text-anchor="middle">Consolidated Response</text>
+                <rect class="flow-box" x="600" y="50" width="150" height="50" rx="8"></rect>
+                <text class="flow-text" x="675" y="80" text-anchor="middle">Developer Persona</text>
+                
+                <rect class="flow-box" x="600" y="200" width="150" height="50" rx="8"></rect>
+                <text class="flow-text" x="675" y="230" text-anchor="middle">Tester Persona</text>
+                
+                <!-- Arrows & Labels (v2) -->
+                <path class="flow-arrow path" d="M200 150 L325 150"></path>
+                <text class="label-text label-fade-1" x="262" y="140" text-anchor="middle">Sends Instruction</text>
+                
+                <path class="flow-arrow path" d="M475 150 L585 90"></path>
+                <path class="flow-arrow path" d="M475 150 L585 210"></path>
+                <text class="label-text label-fade-2" x="525" y="110" text-anchor="middle">Assigns Task</text>
 
-                <rect class="flow-box" x="600" y="25" width="150" height="50" rx="8"></rect>
-                <text class="flow-text" x="675" y="55" text-anchor="middle">Developer Persona</text>
-                
-                <rect class="flow-box" x="600" y="225" width="150" height="50" rx="8"></rect>
-                <text class="flow-text" x="675" y="255" text-anchor="middle">Tester Persona</text>
-                
-                <!-- Arrows -->
-                <path class="flow-arrow path" d="M200 150 L325 50"></path>
-                <path class="flow-arrow path" d="M475 50 L600 50"></path>
-                <path class="flow-arrow path" d="M325 250 L200 150"></path>
-                
-                <!-- Debate Animation -->
-                <path class="flow-arrow bubble-path" d="M675 75 Q 575 150 675 225"></path>
-                <path class="flow-arrow bubble-path" d="M675 225 Q 775 150 675 75"></path>
+                <path class="flow-arrow path" d="M675 100 L675 200"></path>
+                <path class="flow-arrow path" d="M675 200 L675 100"></path>
+                <text class="label-text label-fade-3" x="625" y="155" text-anchor="middle">Debate</text>
 
-                <!-- Merge Animation -->
-                 <path class="flow-arrow merge-path" d="M600 250 L475 250"></path>
-                 <path class="flow-arrow merge-path" d="M600 50 L475 50"></path>
+                <path class="flow-arrow path" d="M600 75 L475 150"></path>
+                <path class="flow-arrow path" d="M600 225 L475 150"></path>
+                <text class="label-text label-fade-4" x="530" y="180" text-anchor="middle">Synthesizes Solution</text>
             </svg>
+        </div>
+    </section>
+
+    <!-- Key Features Section (v2) -->
+    <section class="key-features">
+        <div class="container">
+            <h2>Core Technical Pillars</h2>
+            <p>A brief look at the foundational concepts that make LAJBI a powerful framework for serious AI development.</p>
+            <div class="key-features-grid">
+                <div class="feature-item">
+                    <h3>Declarative Control Language</h3>
+                    <p>A machine-parsable syntax that ensures your instructions are executed with precision, eliminating ambiguity and inconsistency.</p>
+                    <a href="https://github.com/LAJBY/LAJBI/wiki/LAJBI-Command-Reference" target="_blank" rel="noopener noreferrer">View Command Reference →</a>
+                </div>
+                <div class="feature-item">
+                    <h3>PABIAM Cognitive Architecture</h3>
+                    <p>A structured "mind" for each agent, enabling persistent state, justifiable reasoning, and auditable cognitive processes.</p>
+                    <a href="https://github.com/LAJBY/LAJBI/wiki/LAJBI-Architecture-(Part-1):-The-Core-Meta-Prompt#2-the-pabiam-cognitive-architecture" target="_blank" rel="noopener noreferrer">Learn about PABIAM →</a>
+                </div>
+                <div class="feature-item">
+                    <h3>Multi-Agent Orchestration</h3>
+                    <p>Assemble and manage teams of specialized AI agents that collaborate through a formal debate protocol to solve complex problems.</p>
+                    <a href="https://github.com/LAJBY/LAJBI/wiki/Practical-Tutorials#42-multi-persona-collaboration" target="_blank" rel="noopener noreferrer">See a Team in Action →</a>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -357,16 +431,17 @@
     <script>
         // --- Simple script for animated background dots ---
         const container = document.getElementById('background-animation');
-        const numDots = 50; // Adjust for density
-
-        for (let i = 0; i < numDots; i++) {
-            const dot = document.createElement('div');
-            dot.classList.add('dot');
-            dot.style.left = `${Math.random() * 100}vw`;
-            dot.style.top = `${Math.random() * 100}vh`;
-            dot.style.animationDelay = `${Math.random() * 25}s`;
-            dot.style.animationDuration = `${10 + Math.random() * 15}s`;
-            container.appendChild(dot);
+        if (container) {
+            const numDots = 50; // Adjust for density
+            for (let i = 0; i < numDots; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                dot.style.left = `${Math.random() * 100}vw`;
+                dot.style.top = `${Math.random() * 100}vh`;
+                dot.style.animationDelay = `${Math.random() * 25}s`;
+                dot.style.animationDuration = `${10 + Math.random() * 15}s`;
+                container.appendChild(dot);
+            }
         }
     </script>
 
