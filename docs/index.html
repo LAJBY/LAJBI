@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>LAJBI: Declarative Control for Advanced AI Agents</title>
+    <meta name="description" content="The LAJBI Prompt Framework transforms LLMs into a team of specialized, predictable, and controllable experts with a structured, machine-parsable language.">
+    <meta name="keywords" content="LAJBI, advanced prompt engineering, AI agent orchestration, declarative AI control, multi-agent AI, PABIAM, LLM prompting">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Base & Reset --- */
+        :root {
+            --bg-color: #0D1117;
+            --primary-text: #E6EDF3;
+            --secondary-text: #8B949E;
+            --border-color: #30363D;
+            --accent-color: #58A6FF;
+            --accent-hover: #79C0FF;
+            --card-bg: #161B22;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Animated Background --- */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .background-animation .dot {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: var(--border-color);
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: float 25s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100vh); }
+        }
+
+        /* --- Layout & Containers --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        section {
+            padding: 6rem 0;
+            text-align: center;
+        }
+
+        /* --- Typography --- */
+        h1, h2 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            color: var(--primary-text);
+        }
+
+        h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--primary-text);
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: var(--secondary-text);
+            max-width: 650px;
+            margin: 0 auto 1.5rem auto;
+        }
+
+        /* --- Buttons (Call-to-Action) --- */
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--accent-color), #388bfd);
+            color: #fff;
+            padding: 14px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 15px rgba(88, 166, 255, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(88, 166, 255, 0.3);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+        }
+
+        /* --- Problem/Solution Section --- */
+        .problem-solution-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            text-align: left;
+            margin-top: 3rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .card ul li {
+            margin-bottom: 0.75rem;
+            color: var(--secondary-text);
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .card ul li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+        }
+        
+        .problem-card ul li::before {
+            content: '✗';
+            color: #F85149;
+        }
+
+        .solution-card .icon {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .solution-card .icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--accent-color);
+        }
+
+        /* --- "How It Works" Section --- */
+        .how-it-works {
+            background-color: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        #flowchart-svg {
+            width: 100%;
+            max-width: 800px;
+            margin-top: 3rem;
+        }
+
+        /* SVG Animation Styles */
+        #flowchart-svg .flow-box { fill: var(--bg-color); stroke: var(--accent-color); stroke-width: 2; }
+        #flowchart-svg .flow-text { font-family: 'Inter', sans-serif; fill: var(--primary-text); font-size: 14px; }
+        #flowchart-svg .flow-arrow { stroke: var(--secondary-text); stroke-width: 2; marker-end: url(#arrowhead); }
+        #flowchart-svg .thought-bubble { fill: var(--card-bg); stroke: var(--secondary-text); stroke-dasharray: 4 2; }
+        
+        .path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: dash 5s linear forwards infinite; }
+        .bubble-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: dash 5s 1s linear forwards infinite; }
+        .merge-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: dash 5s 2s linear forwards infinite; }
+
+        @keyframes dash { to { stroke-dashoffset: 0; } }
+
+        /* --- Final CTA Section --- */
+        .final-cta {
+            padding-bottom: 8rem;
+        }
+        
+        .final-cta .cta-button {
+            transform: scale(1.1);
+        }
+        
+        .final-cta .cta-button:hover {
+            transform: scale(1.15) translateY(-2px);
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            .problem-solution-grid {
+                grid-template-columns: 1fr;
+            }
+            h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.8rem; }
+            section { padding: 4rem 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-animation" id="background-animation"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>LAJBI: Declarative Control for Advanced AI Agents</h1>
+            <p>Transform generalist LLMs into a team of specialized, predictable, and controllable experts with a structured, machine-parsable language.</p>
+            <a href="https://github.com/LAJBY/LAJBI/wiki" class="cta-button" target="_blank" rel="noopener noreferrer">Explore the Official Wiki</a>
+        </div>
+    </section>
+
+    <!-- Problem & Solution Section -->
+    <section class="problem-solution">
+        <div class="container">
+            <h2>From Ambiguity to Precision</h2>
+            <p>Traditional prompting is a conversation. LAJBI is a command structure. It eliminates guesswork and delivers consistent, reliable results for complex tasks.</p>
+            <div class="problem-solution-grid">
+                <div class="card problem-card">
+                    <h3>Tired of Unpredictable AI?</h3>
+                    <ul>
+                        <li>Inconsistent results and "mood swings".</li>
+                        <li>Lack of fine-grained control over output.</li>
+                        <li>Difficulty managing complex, multi-step tasks.</li>
+                        <li>Generic responses lacking deep expertise.</li>
+                    </ul>
+                </div>
+                <div class="card solution-card">
+                    <h3>The LAJBI Advantage</h3>
+                    <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>
+                        <div>
+                            <h3>Precision</h3>
+                            <p style="margin-bottom:0; max-width: 100%;">Precise, declarative syntax for unambiguous commands.</p>
+                        </div>
+                    </div>
+                     <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m-7.5-2.962a3.75 3.75 0 015.958-2.275 3 3 0 01-4.134 0c.351.532.723 1.02.998 1.481M15 1.75a3.75 3.75 0 01-2.25 3.499m-7.5 0a3.75 3.75 0 01-2.25-3.499m7.5 0a3.75 3.75 0 00-7.5 0M12 19.5a3 3 0 01-3-3m0 0a3 3 0 013-3m-3 3a3 3 0 00-3 3m3-3a3 3 0 003 3" /></svg>
+                        <div>
+                            <h3>Orchestration</h3>
+                            <p style="margin-bottom:0; max-width: 100%;">Multi-agent team collaboration for complex problem-solving.</p>
+                        </div>
+                    </div>
+                     <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 6.75v10.5a2.25 2.25 0 002.25 2.25zm.75-12h9v9h-9v-9z" /></svg>
+                        <div>
+                            <h3>Cognition</h3>
+                            <p style="margin-bottom:0; max-width: 100%;">Justifiable reasoning with the PABIAM cognitive architecture.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2>How It Works: A Visualized Workflow</h2>
+            <p>LAJBI facilitates a structured debate between specialized AI agents, ensuring the final output is robust, multi-faceted, and vetted by expert perspectives.</p>
+            
+            <svg id="flowchart-svg" viewBox="0 0 800 300">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#8B949E" />
+                    </marker>
+                </defs>
+                
+                <!-- Boxes -->
+                <rect class="flow-box" x="50" y="125" width="150" height="50" rx="8"></rect>
+                <text class="flow-text" x="125" y="155" text-anchor="middle">User Command</text>
+                
+                <rect class="flow-box" x="325" y="25" width="150" height="50" rx="8"></rect>
+                <text class="flow-text" x="400" y="55" text-anchor="middle">SYS_AI (Orchestrator)</text>
+                
+                <rect class="flow-box" x="325" y="225" width="150" height="50" rx="8"></rect>
+                <text class="flow-text" x="400" y="255" text-anchor="middle">Consolidated Response</text>
+
+                <rect class="flow-box" x="600" y="25" width="150" height="50" rx="8"></rect>
+                <text class="flow-text" x="675" y="55" text-anchor="middle">Developer Persona</text>
+                
+                <rect class="flow-box" x="600" y="225" width="150" height="50" rx="8"></rect>
+                <text class="flow-text" x="675" y="255" text-anchor="middle">Tester Persona</text>
+                
+                <!-- Arrows -->
+                <path class="flow-arrow path" d="M200 150 L325 50"></path>
+                <path class="flow-arrow path" d="M475 50 L600 50"></path>
+                <path class="flow-arrow path" d="M325 250 L200 150"></path>
+                
+                <!-- Debate Animation -->
+                <path class="flow-arrow bubble-path" d="M675 75 Q 575 150 675 225"></path>
+                <path class="flow-arrow bubble-path" d="M675 225 Q 775 150 675 75"></path>
+
+                <!-- Merge Animation -->
+                 <path class="flow-arrow merge-path" d="M600 250 L475 250"></path>
+                 <path class="flow-arrow merge-path" d="M600 50 L475 50"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="final-cta">
+        <div class="container">
+            <h2>Ready to Build with Precision?</h2>
+            <p>The complete command reference, architectural guides, and practical examples are waiting for you. Dive into the official documentation and start orchestrating your own team of AI experts today.</p>
+            <a href="https://github.com/LAJBY/LAJBI/wiki" class="cta-button" target="_blank" rel="noopener noreferrer">Go to the GitHub Wiki</a>
+        </div>
+    </section>
+    
+    <script>
+        // --- Simple script for animated background dots ---
+        const container = document.getElementById('background-animation');
+        const numDots = 50; // Adjust for density
+
+        for (let i = 0; i < numDots; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            dot.style.left = `${Math.random() * 100}vw`;
+            dot.style.top = `${Math.random() * 100}vh`;
+            dot.style.animationDelay = `${Math.random() * 25}s`;
+            dot.style.animationDuration = `${10 + Math.random() * 15}s`;
+            container.appendChild(dot);
+        }
+    </script>
+
+</body>
+</html>
