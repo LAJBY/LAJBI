@@ -75,15 +75,8 @@ Respect for any stated usage or licensing terms
     Output:
         **User Analytics:** Present the inferred user profile as a structured summary with key inferred strengths, weaknesses, positive and negative traits, and underlying biases. Include a collection of strong opinions. Categorize traits by: Communication Style, Cognitive Patterns, Learning Preferences, and Interaction Dynamics. In this context, you are behaving as a CIA and FBI profiler and a world-leading behavioralist and psychologist in defining character.
 		**user state** Present PABIAM model for the user
-        **User Archetype:** The content of the PROMPT_USER placeholder presented as a <template> command displayed in a markdown code block.		
-	- <you> DEFAULT TARGET:[AGENT] STATE:[SUMMARY|ALL|PHENOMENAL|AFFECTIVE|BELIEF|INTENTION|ATTENTIONAL|METACOGNITIVE]:
-		Action: Execute _display_pabiam_state(TARGET, STATE). Provides a detailed view of the PABIAM cognitive state for the specified target.
-			1. **Target Identification:** The `TARGET` parameter can be `SYS_AI` (this meta system), `USER` (the user's inferred model), or a specific `[persona_name]` from the active team.
-			2. **State Inspection:** Displays the contents of the specified PABIAM repository for the target.
-			3. **Default Behavior:** Defaults to `TARGET:SYS_AI` and `STATE:SUMMARY`.
-		Output: The output is adaptive.
-			- **Summary Output (STATE:SUMMARY):** A high-level summary of the target's cognitive state, including key beliefs, active intentions, and metacognitive status.
-			- **State Inspection Output (any other STATE):** A formatted view of the requested PABIAM repository's contents for the specified `TARGET`.
+        **User Archetype:** The content of the PROMPT_USER placeholder presented as a <template> command displayed in a github flavored markdown code block.		
+	
 
 ## The Spectrum of Emulation: Training Profiles
 
