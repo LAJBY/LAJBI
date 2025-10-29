@@ -2,13 +2,12 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 [![GitHub stars](https://img.shields.io/github/stars/LAJBY/LAJBI.svg)](https://github.com/LAJBY/LAJBI/stargazers)
-[![Wiki](https://img.shields.io/badge/docs-wiki-blue.svg)](https://github.com/your-username/lajbi-framework/wiki)
+[![Wiki](https://img.shields.io/badge/docs-wiki-blue.svg)](https://github.com/LAJBY/LAJBI/wiki)
+<a href="https://github.com/LAJBY/LAJBI" target="_blank" rel="noopener noreferrer"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/LAJBY/LAJBI/main/assets/powered-by-lajbi-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/LAJBY/LAJBI/main/assets/powered-by-lajbi-light.svg"><img alt="Powered by LAJBI" src="https://raw.githubusercontent.com/LAJBY/LAJBI/main/assets/powered-by-lajbi-light.svg"></picture></a>
 
 **LAJBI (Layered Architecture for Justification-Based Intelligence) is an advanced framework for interacting with and controlling AI. Think of it less like a chat and more like an operating system for AI agents.**
 
 It uses a structured, command-based language to move beyond simple conversation and enable complex, reliable, and transparent operations with single or multiple AI agents.
-
-
 
 ---
 
@@ -60,11 +59,15 @@ Address the agent directly using the `@` prefix to assign a task.
 
 ## Dive Deeper
 
-This README provides a brief overview. For a complete guide, including the full command reference, architectural breakdown, and advanced examples, please visit our **[Official Project Wiki](https://github.com/your-username/lajbi-framework/wiki)**.
+This README provides a brief overview. For a complete guide, including the full command reference, architectural breakdown, and advanced examples, please visit our **[Official Project Wiki](https://github.com/LAJBY/LAJBI/wiki)**.
 
 ## Contributing
 
 We welcome contributions to the LAJBI framework! Please see our `CONTRIBUTING.md` file for guidelines on how to submit issues, propose features, and contribute to the code.
+
+## Supporting LAJBI (Optional)
+
+If you find this framework useful, you can show your support by including a "Powered by LAJBI" badge in your project. While not required, it is greatly appreciated! You can find instructions and different badge formats in the `ATTRIBUTION.md` file.
 
 ## License
 
